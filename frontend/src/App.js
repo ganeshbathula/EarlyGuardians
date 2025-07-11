@@ -46,9 +46,23 @@ function App() {
     alert(`Data for ${city}:\nTemperature: ${res.data.data.T2M["20250710"]}°C\nRainfall: ${res.data.data.PRECTOT["20250710"]}mm`);
   };
 
+  // useEffect(() => {
+  //   fetchCountries();
+  // }, []);
+
   useEffect(() => {
-    fetchCountries();
-  }, []);
+        fetch("https://restcountries.com/v3.1/all?fields=name,flags,cca2")
+            .then((res) => res.json())
+            .then((data) => {
+                const countryList = data.map((country) => ({
+                    name: country.name.common,
+                    code: country.cca2,
+                    flag: country.flags.png,
+                }));
+                setCountries(countryList.sort((a, b) => a.name.localeCompare(b.name)));
+            })
+            .catch((err) => console.error("Error fetching countries:", err));
+    }, []);
 
   return (
     <div style={{ padding: 20 }}>
