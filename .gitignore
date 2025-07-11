@@ -1,0 +1,61 @@
+
+# Git
+.git
+.metadata
+.vscode
+
+# Maven
+target
+**/target
+.settings
+**/.settings
+*.classpath
+*.project
+.m2/*
+**/MANIFEST.MF
+**/documentation
+.factorypath
+
+# compiled output  
+/dist  
+/tmp  
+/out-tsc  
+**/web
+
+package-lock.json
+
+# dependencies  
+/node_modules 
+/.angular
+
+
+# IDE - VSCode  
+.vscode/*  
+!.vscode/settings.json  
+!.vscode/tasks.json  
+!.vscode/launch.json  
+!.vscode/extensions.json
+
+# IDE - IntelliJ IDEA
+.idea/*
+
+# misc
+/.sass-cache  
+/connect.lock  
+/coverage  
+/libpeerconnection.log  
+npm-debug.log  
+yarn-error.log  
+testem.log  
+/typings  
+*.log
+*.iml
+.svn
+.externalToolBuilders
+.apt_generated
+.sonar/
+
+# System Files  
+.DS_Store  
+Thumbs.db
+
