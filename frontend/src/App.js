@@ -17,16 +17,16 @@ function App() {
   const [countries, setCountries] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState('');
   const [cityInput, setCityInput] = useState('');
-
+  const [cityOptions, setCityOptions] = useState([]);
   const fetchDisasterInfo = async (city, country) => {
     //filter countries to get the country name
     const countryName = countries.find(c => c.code === country)?.name;
     console.log(`Fetching disaster info for ${city}, ${countryName}`);
-    // const res = await axios.post('http://localhost:5000/api/disaster-info', {
-    //   city,
-    //   country
-    // });
-    // alert(`Data for ${city}:\nTemperature: ${res.data.data.T2M["20250710"]}°C\nRainfall: ${res.data.data.PRECTOT["20250710"]}mm`);
+    const res = await axios.post('http://localhost:5000/api/disaster-info', {
+      city,
+      countryName
+    });
+    alert(`Data for ${city}:\nTemperature: ${res.data.data.T2M["20250710"]}°C\nRainfall: ${res.data.data.PRECTOT["20250710"]}mm`);
 
   };
 
@@ -46,27 +46,34 @@ function App() {
 
   // Wrap loadOptions with debounce
   const debouncedLoadOptions = useCallback(
-    debounce((inputValue, callback) => {
-      if (!selectedCountry || inputValue.length < 2) {
+    debounce((inputValue, callback, countryCode) => {
+      if (!countryCode) {
         callback([]);
+        setCityOptions([]);
         return;
+      }
+      // If no input, fetch basic cities for the selected country
+      const params = {
+        countryIds: countryCode,
+        limit: 10
+      };
+      if (inputValue && inputValue.length >= 2) {
+        params.namePrefix = inputValue;
+        params.limit = 10; // Limit results to 10 for better performance
       }
       axios.get('https://wft-geo-db.p.rapidapi.com/v1/geo/cities', {
         headers: {
           'X-RapidAPI-Key': '9ae47a33famshf7d530901ff2e44p1b9ca9jsnb5facb76285d',
           'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
         },
-        params: {
-          countryIds: selectedCountry,
-          namePrefix: inputValue,
-          limit: 5
-        }
+        params
       }).then(res => {
         const options = res.data.data.map(city => ({
           label: city.name,
           value: city.name
         }));
         callback(options);
+        setCityOptions(options);
       });
     }, 1000), // 1000ms = 1 second
     [selectedCountry]
@@ -108,17 +115,16 @@ function App() {
       <div className="container text-center align-items-center">
         <div className="row align-items-start">
           <div className="col">
-            {/* <label>Select Country : </label> */}
-            {/*<select style={{ width: '50%' }} onChange={(e) => setSelectedCountry(e.target.value)}>
-              <option value="">--Choose--</option>
-              {countries.map((c) => (
-                <option key={c.code} value={c.code}>{c.name}</option>
-              ))}
-            </select> */}
             <Select
               options={countryOptions}
               value={countryOptions.find(opt => opt.value === selectedCountry) || null}
-              onChange={option => setSelectedCountry(option ? option.value : '')}
+              onChange={option => {
+                const country = option ? option.value : '';
+                setSelectedCountry(country);
+                setCityInput(''); // Reset city input when country changes
+                debouncedLoadOptions('', () => { }, country);// Fetch basic info for the selected country
+
+              }}
               placeholder="Select Country"
               // styles={{ container: base => ({ ...base, width: '50%' }) }}
               isSearchable
@@ -127,12 +133,18 @@ function App() {
           </div>
           <div className="col">
             {selectedCountry && (
-              <AsyncSelect cacheOptions loadOptions={debouncedLoadOptions} defaultOptions
+              <AsyncSelect cacheOptions loadOptions={(inputValue, callback) => debouncedLoadOptions(inputValue, callback, selectedCountry)}
+                defaultOptions={cityOptions}
+                options={cityOptions}
                 value={cityInput ? { label: cityInput, value: cityInput } : null}
                 onChange={option => {
                   const city = option ? option.value : '';
                   setCityInput(city);
                   fetchDisasterInfo(city, selectedCountry);
+                  if (!city) {
+                    // Trigger basic city search when cleared
+                    debouncedLoadOptions('', options => setCityOptions(options), selectedCountry);
+                  }
                 }}
                 placeholder="Enter City Name"
                 isClearable />
