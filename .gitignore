@@ -1,8 +1,8 @@
-
 # Git
 .git
 .metadata
 .vscode
+.ipynb_checkpoints
 
 # Maven
 target
