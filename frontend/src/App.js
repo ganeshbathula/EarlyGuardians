@@ -22,11 +22,11 @@ function App() {
     //filter countries to get the country name
     const countryName = countries.find(c => c.code === country)?.name;
     console.log(`Fetching disaster info for ${city}, ${countryName}`);
-    // const res = await axios.post('http://localhost:5000/api/disaster-info', {
-    //   city,
-    //   country
-    // });
-    // alert(`Data for ${city}:\nTemperature: ${res.data.data.T2M["20250710"]}°C\nRainfall: ${res.data.data.PRECTOT["20250710"]}mm`);
+    const res = await axios.post('http://localhost:5000/api/disaster-info', {
+    city,
+    countryName
+     });
+    alert(`Data for ${city}:\nTemperature: ${res.data.data.T2M["20250710"]}°C\nRainfall: ${res.data.data.PRECTOT["20250710"]}mm`);
 
   };
 

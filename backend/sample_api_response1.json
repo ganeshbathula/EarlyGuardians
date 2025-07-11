@@ -1,0 +1,17 @@
+{
+    "earthquake_alerts": "No recent earthquakes in the area.",
+    "weather": {
+        "condition": "Mist",
+        "country": "India",
+        "feels_like_celsius": 31.3,
+        "humidity": 55,
+        "is_flood_risk": false,
+        "is_heavy_rain": false,
+        "is_rain_expected": false,
+        "location": "Hyderabad",
+        "precip_mm": 0.0,
+        "region": "Telangana",
+        "temperature_celsius": 30.2,
+        "wind_kph": 10.4
+    }
+}

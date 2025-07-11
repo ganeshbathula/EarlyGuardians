@@ -1,0 +1,23 @@
+ {
+    "earthquake_alerts": [
+        {
+            "magnitude": 5.1,
+            "place": "112 km SSE of Miyakojima, Japan",
+            "time": "2025-07-11T07:09:25.581000Z"
+        }
+    ],
+    "weather": {
+        "condition": "Overcast",
+        "country": "Japan",
+        "feels_like_celsius": 30.7,
+        "humidity": 94,
+        "is_flood_risk": false,
+        "is_heavy_rain": false,
+        "is_rain_expected": false,
+        "location": "Hirara",
+        "precip_mm": 0.0,
+        "region": "Okinawa",
+        "temperature_celsius": 27.1,
+        "wind_kph": 18.0
+    }
+}
